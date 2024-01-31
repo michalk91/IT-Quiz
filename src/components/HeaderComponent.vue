@@ -3,7 +3,7 @@
 <template>
   <div class="title">
     <h1 class="green">IT Quiz</h1>
-    <h3>Test your IT knowledge!</h3>
+    <h2>Check your IT knowledge!</h2>
   </div>
 </template>
 
@@ -15,12 +15,7 @@ h1 {
   top: -10px;
 }
 
-h3 {
+.title h2 {
   font-size: 2rem;
-}
-
-.title h1,
-.title h3 {
-  text-align: center;
 }
 </style>
