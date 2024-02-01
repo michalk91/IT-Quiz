@@ -128,7 +128,7 @@ const restartQuiz = () => {
     <div class="btnsContainer" v-if="quizInfo.finished">
       <p>Your score: {{ quizInfo.score }}/{{ questionCount }}</p>
       <button @click="restartCurrentCategory">Try again</button>
-      <button @click="restartQuiz">Back to the category screen</button>
+      <button @click="restartQuiz">Back to category</button>
     </div>
   </main>
 </template>
