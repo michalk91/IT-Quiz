@@ -11,7 +11,6 @@ const props = defineProps<{
 const { category, difficulty } = toRefs(props)
 const { resetQuizInfo } = props
 
-const questionsList = ref([])
 const quizInfo = ref({
   questionNumber: 0,
   score: 0,
@@ -122,7 +121,7 @@ const restartQuiz = () => {
         @click="handleQuestion"
         v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_f"
       >
-        F. - {{ (questionsList[quizInfo.questionNumber] as any)?.answers.answer_f }}
+        F. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_f }}
       </p>
     </div>
     <div class="btnsContainer" v-if="quizInfo.finished">
