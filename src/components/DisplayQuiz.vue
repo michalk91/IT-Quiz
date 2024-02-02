@@ -8,6 +8,9 @@ const props = defineProps<{
   resetQuizInfo: () => void
 }>()
 
+const API_KEY = import.meta.env.VITE_API_KEY
+const questionCount = 10
+
 const { category, difficulty } = toRefs(props)
 const { resetQuizInfo } = props
 
@@ -16,10 +19,6 @@ const quizInfo = ref({
   score: 0,
   finished: false
 })
-
-const questionCount = 10
-
-const API_KEY = import.meta.env.VITE_API_KEY
 
 async function getData() {
   const res = await fetch(
@@ -34,22 +33,19 @@ async function getData() {
   return finalRes
 }
 function useQuestionsQuery() {
-  return useQuery('questions', getData, {
+  return useQuery(['questions', category.value, difficulty.value, questionCount], getData, {
     staleTime: Infinity,
-    cacheTime: Infinity,
+    cacheTime: 0,
     refetchOnWindowFocus: false
   })
 }
 const { isLoading, isError, data, error } = useQuestionsQuery()
 
-const handleQuestion = (e: MouseEvent) => {
-  const convertProxy = JSON.parse(JSON.stringify(data.value[quizInfo.value.questionNumber]))
-
+const handleQuestion = (correctAnswer: string) => {
   if (quizInfo.value.questionNumber <= questionCount) {
-    if ((e?.currentTarget as HTMLElement).id === convertProxy.correct_answer) {
+    if (correctAnswer === 'true') {
       quizInfo.value.score++
     }
-
     quizInfo.value.questionNumber++
   }
   if (quizInfo.value.questionNumber === questionCount) {
@@ -74,54 +70,55 @@ const restartQuiz = () => {
     <span v-if="isLoading" class="loader"></span>
     <span v-else-if="isError">Error: {{ error.message }}</span>
     <div v-if="!quizInfo.finished">
-      <p class="question">{{ (data[quizInfo.questionNumber] as any)?.question }}</p>
+      <p class="question-number">Question {{ quizInfo.questionNumber }} / {{ questionCount }}</p>
+      <p class="question">{{ data[quizInfo.questionNumber].question }}</p>
       <p
         class="answer"
         id="answer_a"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_a"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_a_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_a"
       >
-        A. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_a }}
+        A. - {{ data[quizInfo.questionNumber].answers.answer_a }}
       </p>
       <p
         class="answer"
         id="answer_b"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_b"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_b_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_b"
       >
-        B. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_b }}
+        B. - {{ data[quizInfo.questionNumber].answers.answer_b }}
       </p>
       <p
         class="answer"
         id="answer_c"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_c"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_c_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_c"
       >
-        C. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_c }}
+        C. - {{ data[quizInfo.questionNumber].answers.answer_c }}
       </p>
       <p
         class="answer"
         id="answer_d"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_d"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_d_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_d"
       >
-        D. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_d }}
+        D. - {{ data[quizInfo.questionNumber].answers.answer_d }}
       </p>
       <p
         class="answer"
         id="answer_e"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_e"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_e_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_e"
       >
-        E. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_e }}
+        E. - {{ data[quizInfo.questionNumber].answers.answer_e }}
       </p>
       <p
         class="answer"
         id="answer_f"
-        @click="handleQuestion"
-        v-if="(data[quizInfo.questionNumber] as any)?.answers.answer_f"
+        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_f_correct)"
+        v-if="data[quizInfo.questionNumber].answers.answer_f"
       >
-        F. - {{ (data[quizInfo.questionNumber] as any)?.answers.answer_f }}
+        F. - {{ data[quizInfo.questionNumber].answers.answer_f }}
       </p>
     </div>
     <div class="btnsContainer" v-if="quizInfo.finished">
@@ -133,6 +130,9 @@ const restartQuiz = () => {
 </template>
 
 <style>
+.question-number {
+  font-size: 1.4rem;
+}
 .question {
   font-weight: bolder;
 }
