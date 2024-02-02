@@ -70,7 +70,7 @@ const restartQuiz = () => {
     <span v-if="isLoading" class="loader"></span>
     <span v-else-if="isError">Error: {{ error.message }}</span>
     <div v-if="!quizInfo.finished">
-      <p class="question-number">Question {{ quizInfo.questionNumber }} / {{ questionCount }}</p>
+      <p class="question-number">{{ quizInfo.questionNumber + 1 }} / {{ questionCount }}</p>
       <p class="question">{{ data[quizInfo.questionNumber].question }}</p>
       <p
         class="answer"
@@ -131,7 +131,7 @@ const restartQuiz = () => {
 
 <style>
 .question-number {
-  font-size: 1.4rem;
+  font-size: 1.9rem;
 }
 .question {
   font-weight: bolder;
