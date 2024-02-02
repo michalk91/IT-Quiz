@@ -8,16 +8,13 @@
   font-weight: normal;
 }
 
-.btnsContainer {
-  text-align: center;
-}
-
 .btnsContainer button {
+  color: var(--color-text);
   outline: 0;
   margin: 10px;
   align-items: center;
   background: 0 0;
-  border: 1px solid #000;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   cursor: pointer;
   display: inline-flex;
