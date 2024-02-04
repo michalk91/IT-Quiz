@@ -21,29 +21,40 @@ const quizInfo = ref({
 })
 
 async function getData() {
-  const res = await fetch(
+  return await fetch(
     `https://quizapi.io/api/v1/questions?category=${category?.value}&difficulty=${difficulty?.value}&limit=${questionCount}`,
     {
       headers: {
         'X-Api-Key': API_KEY
       }
     }
-  )
-  const finalRes = await res.json()
-  return finalRes
+  ).then((res) => res.json())
 }
-function useQuestionsQuery() {
-  return useQuery(['questions', category.value, difficulty.value, questionCount], getData, {
+
+const { isLoading, isError, data, error } = useQuery(
+  ['questions', category.value, difficulty.value, questionCount],
+  getData,
+  {
     staleTime: Infinity,
     cacheTime: 0,
     refetchOnWindowFocus: false
-  })
-}
-const { isLoading, isError, data, error } = useQuestionsQuery()
+  }
+)
 
-const handleQuestion = (correctAnswer: string) => {
+const handleQuestion = (answer: string) => {
+  const convertedData = JSON.parse(
+    JSON.stringify(data.value[quizInfo.value.questionNumber].correct_answers)
+  )
+  let correctAnswer = ''
+
+  Object.entries(convertedData).forEach(([key, item]) => {
+    if (item === 'true') {
+      correctAnswer = key.slice(0, -8)
+    }
+  })
+
   if (quizInfo.value.questionNumber <= questionCount) {
-    if (correctAnswer === 'true') {
+    if (answer === correctAnswer) {
       quizInfo.value.score++
     }
     quizInfo.value.questionNumber++
@@ -69,56 +80,16 @@ const restartQuiz = () => {
   <main>
     <span v-if="isLoading" class="loader"></span>
     <span v-else-if="isError">Error: {{ error.message }}</span>
-    <div v-if="!quizInfo.finished">
+    <div v-if="!quizInfo.finished && data">
       <p class="question-number">{{ quizInfo.questionNumber + 1 }} / {{ questionCount }}</p>
-      <p class="question">{{ data[quizInfo.questionNumber].question }}</p>
+      <p class="question">{{ data && data[quizInfo.questionNumber].question }}</p>
       <p
+        v-for="[letter, answer] in Object.entries(data[quizInfo.questionNumber].answers)"
+        :key="letter"
         class="answer"
-        id="answer_a"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_a_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_a"
+        @click="handleQuestion(letter)"
       >
-        A. - {{ data[quizInfo.questionNumber].answers.answer_a }}
-      </p>
-      <p
-        class="answer"
-        id="answer_b"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_b_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_b"
-      >
-        B. - {{ data[quizInfo.questionNumber].answers.answer_b }}
-      </p>
-      <p
-        class="answer"
-        id="answer_c"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_c_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_c"
-      >
-        C. - {{ data[quizInfo.questionNumber].answers.answer_c }}
-      </p>
-      <p
-        class="answer"
-        id="answer_d"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_d_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_d"
-      >
-        D. - {{ data[quizInfo.questionNumber].answers.answer_d }}
-      </p>
-      <p
-        class="answer"
-        id="answer_e"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_e_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_e"
-      >
-        E. - {{ data[quizInfo.questionNumber].answers.answer_e }}
-      </p>
-      <p
-        class="answer"
-        id="answer_f"
-        @click="handleQuestion(data[quizInfo.questionNumber].correct_answers.answer_f_correct)"
-        v-if="data[quizInfo.questionNumber].answers.answer_f"
-      >
-        F. - {{ data[quizInfo.questionNumber].answers.answer_f }}
+        {{ answer && `${letter.slice(-1).toLocaleUpperCase()} - ${answer}` }}
       </p>
     </div>
     <div class="btnsContainer" v-if="quizInfo.finished">
