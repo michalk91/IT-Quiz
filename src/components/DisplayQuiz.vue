@@ -49,7 +49,7 @@ const handleQuestion = (answer: string) => {
 
   Object.entries(convertedData).forEach(([key, item]) => {
     if (item === 'true') {
-      correctAnswer = key.slice(0, -8)
+      correctAnswer = correctAnswer === '' ? key.slice(0, -8) : correctAnswer
     }
   })
 
