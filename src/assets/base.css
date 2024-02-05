@@ -89,3 +89,7 @@ header {
   border-bottom: 3px solid var(--color-heading);
   padding-bottom: 20px;
 }
+
+p {
+  word-wrap: break-word;
+}
