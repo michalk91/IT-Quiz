@@ -1,10 +1,6 @@
 # IT-Quiz
 
-An application made in Vue containing a simple quiz on IT
-knowledge allows you to choose categories (Linux, DevOps, Docker,
-SQL) and question difficulty levels (EASY, MEDIUM, HARD). At the
-end of the quiz, the total number of points earned is displayed. The
-maximum possible score is 10.
+A simple application made in Vue, containing a quiz on IT knowledge, allows you to choose categories (Code, Linux, DevOps, Docker, SQL) and question difficulty levels (EASY, MEDIUM, HARD). At the end of the quiz, the total number of points earned will be displayed. The maximum possible score is 10.
 
 ## Demo
 
