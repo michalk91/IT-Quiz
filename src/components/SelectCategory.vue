@@ -27,6 +27,7 @@ const resetQuizInfo = () => {
   <main>
     <div @click="setCategory" class="btnsContainer" v-if="categoryInfo.category === ''">
       <p>Select a category:</p>
+      <button>Code</button>
       <button>Linux</button>
       <button>DevOps</button>
       <button>Docker</button>
