@@ -57,9 +57,4 @@ a,
   body {
     display: flex;
   }
-
-  #app {
-    padding: 2rem 2rem;
-    text-align: center;
-  }
 }
