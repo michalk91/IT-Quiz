@@ -1,6 +1,31 @@
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
 import { useQuery } from 'vue-query'
+import { z } from 'zod'
+
+const QuestionsSchema = z.array(
+  z.object({
+    answers: z.object({
+      answer_a: z.string().nullable(),
+      answer_b: z.string().nullable(),
+      answer_c: z.string().nullable(),
+      answer_d: z.string().nullable(),
+      answer_e: z.string().nullable(),
+      answer_f: z.string().nullable()
+    }),
+    category: z.string(),
+    correct_answers: z.object({
+      answer_a_correct: z.string(),
+      answer_b_correct: z.string(),
+      answer_c_correct: z.string(),
+      answer_d_correct: z.string(),
+      answer_e_correct: z.string(),
+      answer_f_correct: z.string()
+    }),
+    difficulty: z.string(),
+    question: z.string()
+  })
+)
 
 const props = defineProps<{
   category: string
@@ -21,14 +46,17 @@ const quizInfo = ref({
 })
 
 async function getData() {
-  return await fetch(
+  const response = await fetch(
     `https://quizapi.io/api/v1/questions?category=${category?.value}&difficulty=${difficulty?.value}&limit=${questionCount}`,
     {
       headers: {
         'X-Api-Key': API_KEY
       }
     }
-  ).then((res) => res.json())
+  )
+  const json = await response.json()
+
+  return QuestionsSchema.parse(json)
 }
 
 const { isLoading, isError, data, error } = useQuery(
