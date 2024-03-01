@@ -107,8 +107,8 @@ const restartQuiz = () => {
 <template>
   <main>
     <span v-if="isLoading" class="loader"></span>
-    <span v-else-if="isError">Error: {{ error.message }}</span>
-    <div v-if="!quizInfo.finished && data">
+    <span v-else-if="isError" class="error"><strong>Error:</strong> {{ error.message }}</span>
+    <div v-else-if="!quizInfo.finished && data">
       <p class="question-number">{{ quizInfo.questionNumber + 1 }} / {{ questionCount }}</p>
       <p class="question">{{ data && data[quizInfo.questionNumber].question }}</p>
       <p
@@ -120,7 +120,7 @@ const restartQuiz = () => {
         {{ answer && `${letter.slice(-1).toLocaleUpperCase()} - ${answer}` }}
       </p>
     </div>
-    <div class="btnsContainer" v-if="quizInfo.finished">
+    <div class="btnsContainer" v-else-if="quizInfo.finished">
       <p>Your score: {{ quizInfo.score }}/{{ questionCount }}</p>
       <button @click="restartCurrentCategory">Try again</button>
       <button @click="restartQuiz">Back to category</button>
@@ -150,6 +150,14 @@ const restartQuiz = () => {
   display: block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+}
+
+.error {
+  font-size: 2rem;
+}
+
+.error strong {
+  font-weight: bold;
 }
 
 @keyframes rotation {
