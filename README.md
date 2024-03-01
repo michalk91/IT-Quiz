@@ -8,4 +8,5 @@ https://it-quiz.vercel.app/
 
 ## NPM Packages used: 
 - Vue,
-- Vue Query
+- Vue Query,
+- zod
