@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "vue": "^3.3.11",
-    "vue-query": "^1.26.0"
+    "vue-query": "^1.26.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
